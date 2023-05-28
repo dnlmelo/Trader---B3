@@ -12,14 +12,14 @@ export const orderbookReducer = createSlice({
     value: {} as IOrderBook
   },
   reducers: {
-    incrementByAmount: (state, action:{type:string, payload:IOrderBook}) => {
+    clearBook: (state)=>{ state.value = {} as IOrderBook},
+    updateOrderBook: (state, action:{type:string, payload:IOrderBook}) => {
       state.value = action.payload
-      console.log(state.value)
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { incrementByAmount } = orderbookReducer.actions
+export const { updateOrderBook, clearBook } = orderbookReducer.actions
 
 export default orderbookReducer.reducer

@@ -18,14 +18,21 @@ export const tickerReducer = createSlice({
     value: [] as ITrades[]
   },
   reducers: {
-    incrementByAmount: (state, action:{type:string, payload:ITrades}) => {
-      state.value.push(action.payload)
-      console.log(state.value)
+    clearTrades: (state, action)=>{
+      state.value = []
+    },
+    updateTrades: (state, action:{type:string, payload:ITrades}) => {
+      if(state.value.length >= 20){
+        state.value.splice(0, 1, action.payload)
+
+      }else{
+        state.value.unshift(action.payload)
+      }
     },
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { incrementByAmount } = tickerReducer.actions
+export const { updateTrades, clearTrades } = tickerReducer.actions
 
 export default tickerReducer.reducer

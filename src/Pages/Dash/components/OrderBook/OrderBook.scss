@@ -1,3 +1,24 @@
-.Counter {
-    background: yellow
+$color-bid: #52c3a1; 
+$color-ask: #df6262;
+
+.table-bid tbody tr:not(:first-of-type) td{
+    color: $color-bid;
+}
+
+.table-ask tbody tr:not(:first-of-type) td{
+    color: $color-ask;
+}
+.bid-label,
+.ask-label{
+    color: white;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.ask-label{
+    background: $color-ask
+}
+
+.bid-label{
+    background: $color-bid
 }

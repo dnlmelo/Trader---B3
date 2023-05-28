@@ -1,29 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Dash.scss';
 import OrderBook from './components/OrderBook/OrderBook'
 import Trades from './components/Ticker/Ticker';
 import { useDispatch } from 'react-redux';
-import { incrementByAmount as updateOrderBook } from './components/OrderBook/OrderBook.reducer';
+import { updateOrderBook } from './components/OrderBook/OrderBook.reducer';
 import useWebSocket from 'react-use-websocket';
-import { incrementByAmount } from './components/Ticker/Ticker.reduce';
+import {  updateTrades } from './components/Ticker/Ticker.reduce';
 
 const CURRENCIES = [
-  'btcusd', 'btceur', 'btcgbp', 'btcpax', 'ethbtc', 'ethusd',  'etheur', 'ethgbp'
+  'btc-usd', 'btc-eur', 'btc-gbp', 'btc-pax', 'eth-btc', 'eth-usd',  'eth-eur', 'eth-gbp'
 ]
 export default function Dash() {
   const url = 'wss://ws.bitstamp.net'
   const dispatch = useDispatch()
+  const [currency, setCurrency] = useState(CURRENCIES[0])
   const { sendJsonMessage } = useWebSocket(url, {
-    onOpen: () => subscribe(CURRENCIES[0]),
+    onOpen: () => subscribe(currency),
     onClose: () => console.log('WebSocket connection closed.'),
     shouldReconnect: (closeEvent) => true,
     onMessage: (event: WebSocketEventMap['message']) => broadcastMessage(event)
   });
 
   function subscribe (currency:string){
-    console.log('subscript', currency)
-    const book = `order_book_${currency}`
-    const trades = `live_trades_${currency}`
+    const c = currency.replace('-', '')
+    const book = `order_book_${c}`
+    const trades = `live_trades_${c}`
 
     sendJsonMessage({
         "event": "bts:subscribe",
@@ -31,20 +32,36 @@ export default function Dash() {
           channel: book
         }
     })
+
     sendJsonMessage({
       "event": "bts:subscribe",
       "data": {
         channel: trades
       }
-  })
+    })
   }
 
-  function unsubscribe(channel:string){
-    console.log('unsubscribe')
+  function updateCurrency(newCurrency:string){
+    unsubscribe(currency)
+    setCurrency(newCurrency)
+    subscribe(newCurrency)
+  }
+
+  function unsubscribe(currency:string){
+    const c = currency.replace('-', '')
+    const book = `order_book_${c}`
+    const trades = `live_trades_${c}`
+
     sendJsonMessage({
-        "event": "bts:subscribe",
+      "event": "bts:unsubscribe",
+      "data": {
+        channel: book
+      }
+    })
+    sendJsonMessage({
+        "event": "bts:unsubscribe",
         "data": {
-            channel
+          channel: trades
         }
     })
   }
@@ -60,27 +77,27 @@ export default function Dash() {
         break;
 
       case 'trade':
-        dispatch(incrementByAmount(response.data));
+        dispatch(updateTrades(response.data));
         break;
     }
   };
 
   return(
     <div className='container px-4 gx-5'>
-      <div> 
-        <select defaultValue={CURRENCIES[0]} onChange={(e)=>subscribe(e.target.value)}>
+      <div className='col-12 mb-4'> 
+        <select defaultValue={currency} onChange={(e)=>updateCurrency(e.target.value)}>
           {CURRENCIES.map((v, i)=>
             <option value={v} key={i}>{v.toUpperCase()}</option>
           )}
         </select>
       </div>
-      <div className="row">
-        <div className='col-6'>
-          <OrderBook/>
+      <div className="row m-0">
+        <div className='col p-0 me-5'>
+          <OrderBook currency={currency}/>
         </div>
 
-        <div className='col-6'>
-          <Trades />
+        <div className='col p-0'>
+          <Trades currency={currency} />
         </div>
       </div>
     </div>
