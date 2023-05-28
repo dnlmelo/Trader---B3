@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { subtagsLanguage } from '../../../../utils';
 import { ITrades } from './Ticker.reduce';
 import './Ticker.scss';
 
@@ -22,8 +23,13 @@ const Trades = (props:{currency: string})=> {
       <tbody>
         {trades && trades.map((v, i)=>
         <tr key={i}>
-          <td>{new Date(Number(v.timestamp.concat('000'))).toLocaleString()}</td>
-          <td>{v.price}</td>
+          <td>{new Date(Number(v.timestamp.concat('000'))).toLocaleTimeString()}</td>
+          <td>{
+            new Intl.NumberFormat(
+              subtagsLanguage[props.currency], 
+              {style: 'currency', currency: pair[1].toUpperCase()}
+            ).format(v.price)}
+          </td>
           <td>{v.amount}</td>
         </tr>)}
       </tbody>

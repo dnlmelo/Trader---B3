@@ -8,8 +8,9 @@ import useWebSocket from 'react-use-websocket';
 import { clearTrades, updateTrades } from './components/Ticker/Ticker.reduce';
 
 const CURRENCIES = [
-  'btc-usd', 'btc-eur', 'btc-gbp', 'btc-pax', 'eth-btc', 'eth-usd',  'eth-eur', 'eth-gbp'
+  'btc-usd', 'btc-eur', 
 ]
+
 export default function Dash() {
   const url = 'wss://ws.bitstamp.net'
   const dispatch = useDispatch()
