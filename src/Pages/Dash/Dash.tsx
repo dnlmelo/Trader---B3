@@ -1,35 +1,45 @@
 import React from 'react';
 import './Dash.scss';
 import OrderBook from './components/OrderBook/OrderBook'
-import Ticker from './components/Ticker/Ticker';
+import Trades from './components/Ticker/Ticker';
 import { useDispatch } from 'react-redux';
 import { incrementByAmount as updateOrderBook } from './components/OrderBook/OrderBook.reducer';
 import useWebSocket from 'react-use-websocket';
 import { incrementByAmount } from './components/Ticker/Ticker.reduce';
 
-
+const CURRENCIES = [
+  'btcusd', 'btceur', 'btcgbp', 'btcpax', 'ethbtc', 'ethusd',  'etheur', 'ethgbp'
+]
 export default function Dash() {
   const url = 'wss://ws.bitstamp.net'
   const dispatch = useDispatch()
   const { sendJsonMessage } = useWebSocket(url, {
-    onOpen: () => console.log('WebSocket connection opened.'),
+    onOpen: () => subscribe(CURRENCIES[0]),
     onClose: () => console.log('WebSocket connection closed.'),
     shouldReconnect: (closeEvent) => true,
     onMessage: (event: WebSocketEventMap['message']) => broadcastMessage(event)
   });
 
-  const subscribe = (channel:string)=>{
-    console.log('subscript', channel)
+  function subscribe (currency:string){
+    console.log('subscript', currency)
+    const book = `order_book_${currency}`
+    const trades = `live_trades_${currency}`
 
     sendJsonMessage({
         "event": "bts:subscribe",
         "data": {
-          channel
+          channel: book
         }
     })
+    sendJsonMessage({
+      "event": "bts:subscribe",
+      "data": {
+        channel: trades
+      }
+  })
   }
 
-  const unsubscribe = (channel:string)=>{
+  function unsubscribe(channel:string){
     console.log('unsubscribe')
     sendJsonMessage({
         "event": "bts:subscribe",
@@ -58,8 +68,10 @@ export default function Dash() {
   return(
     <div className='container px-4 gx-5'>
       <div> 
-        <select name="" id="">
-          <option value="">Currency</option>
+        <select defaultValue={CURRENCIES[0]} onChange={(e)=>subscribe(e.target.value)}>
+          {CURRENCIES.map((v, i)=>
+            <option value={v} key={i}>{v.toUpperCase()}</option>
+          )}
         </select>
       </div>
       <div className="row">
@@ -68,7 +80,7 @@ export default function Dash() {
         </div>
 
         <div className='col-6'>
-          <Ticker />
+          <Trades />
         </div>
       </div>
     </div>

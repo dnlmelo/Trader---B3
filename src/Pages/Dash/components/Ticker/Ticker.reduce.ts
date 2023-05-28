@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-export interface ITicker {
+export interface ITrades {
     id:number
     amount:number
     amount_str:string
@@ -15,10 +15,10 @@ export interface ITicker {
 export const tickerReducer = createSlice({
   name: 'tickerSlice',
   initialState: {
-    value: [] as ITicker[]
+    value: [] as ITrades[]
   },
   reducers: {
-    incrementByAmount: (state, action:{type:string, payload:ITicker}) => {
+    incrementByAmount: (state, action:{type:string, payload:ITrades}) => {
       state.value.push(action.payload)
       console.log(state.value)
     },
