@@ -3,9 +3,9 @@ import './Dash.scss';
 import OrderBook from './components/OrderBook/OrderBook'
 import Trades from './components/Ticker/Ticker';
 import { useDispatch } from 'react-redux';
-import { updateOrderBook } from './components/OrderBook/OrderBook.reducer';
+import { updateOrderBook, clearBook } from './components/OrderBook/OrderBook.reducer';
 import useWebSocket from 'react-use-websocket';
-import {  updateTrades } from './components/Ticker/Ticker.reduce';
+import { clearTrades, updateTrades } from './components/Ticker/Ticker.reduce';
 
 const CURRENCIES = [
   'btc-usd', 'btc-eur', 'btc-gbp', 'btc-pax', 'eth-btc', 'eth-usd',  'eth-eur', 'eth-gbp'
@@ -42,6 +42,8 @@ export default function Dash() {
   }
 
   function updateCurrency(newCurrency:string){
+    dispatch(clearTrades([]))
+    dispatch(clearBook())
     unsubscribe(currency)
     setCurrency(newCurrency)
     subscribe(newCurrency)
