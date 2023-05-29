@@ -2,13 +2,14 @@ import React from 'react'
 import '@testing-library/jest-dom'
 import { render, screen } from '@testing-library/react';
 import Dash from './Dash';
+import { renderWithProviders } from '../../utils/test.utils';
 
-describe('<Counter />', () => {
+describe('<Dash />', () => {
   test('it should mount', () => {
-    render(<Dash />);
+    renderWithProviders(<Dash />)
     
-    const counter = screen.getByTestId('Counter');
+    const dash = screen.queryByTestId('Dash');
 
-    expect(counter).toBeDefined();
+    expect(dash).toBeDefined();
   });
 });

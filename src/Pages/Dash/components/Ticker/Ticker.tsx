@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { subtagsLanguage } from '../../../../utils';
+import { subtagsLanguage } from '../../../../utils/utils';
 import { ITrades } from './Ticker.reduce';
 import './Ticker.scss';
 

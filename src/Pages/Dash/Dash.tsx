@@ -87,7 +87,7 @@ export default function Dash() {
 
   return(
     <div className='container px-4 gx-5'>
-      <div className='col-12 mb-4'> 
+      <div className='col-12 mb-4 d-flex'> 
         <select defaultValue={currency} onChange={(e)=>updateCurrency(e.target.value)}>
           {CURRENCIES.map((v, i)=>
             <option value={v} key={i}>{v.toUpperCase()}</option>
