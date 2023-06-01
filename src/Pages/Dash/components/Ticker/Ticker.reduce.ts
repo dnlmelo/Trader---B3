@@ -24,11 +24,8 @@ export const tickerReducer = createSlice({
     updateTrades: (state, action:{type:string, payload:ITrades}) => {
       if(state.value.length === 20){
         state.value.pop();
-        state.value.unshift(action.payload)
-
-      }else{
-        state.value.unshift(action.payload)
       }
+      state.value.unshift(action.payload)
     },
   },
 })
