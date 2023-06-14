@@ -1,12 +1,9 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { subtagsLanguage } from '../../../../utils/utils';
-import { IOrderBook } from './OrderBook.reducer';
 import './OrderBook.scss';
 
-const OrderBook = (props:{currency:string})=>{
-    const orders:IOrderBook = useSelector((state:any)=>state.orderbook.value)
+const OrderBook = (props:{currency:string, book: {asks:any[], bids:any[]}})=>{
     const pair = props.currency.split('-')
+
     return <>
       <h2>Order Book</h2>
       <div className='h-300 d-flex flex-row gap-4 overflow-auto h-section'>
@@ -20,7 +17,7 @@ const OrderBook = (props:{currency:string})=>{
             </thead>
             <tbody>
               <tr className='text-center'><td className='ask-label' colSpan={2}>ask</td></tr>
-              {orders.asks?.map((v:any[], i)=>
+              {props.book?.asks?.map((v:any[], i)=>
               <tr key={i}>
                 <td>{
                   new Intl.NumberFormat(
@@ -44,7 +41,7 @@ const OrderBook = (props:{currency:string})=>{
             </thead>
             <tbody>
               <tr className='text-center'><td className='bid-label' colSpan={2}>bids</td></tr>
-              {orders.bids?.map((v:any[], i)=>
+              {props.book?.bids?.map((v:any[], i)=>
               <tr key={i}>
                 <td>{
                   new Intl.NumberFormat(

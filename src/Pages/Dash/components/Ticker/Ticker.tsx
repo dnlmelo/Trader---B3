@@ -1,11 +1,7 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
 import { subtagsLanguage } from '../../../../utils/utils';
-import { ITrades } from './Ticker.reduce';
 import './Ticker.scss';
 
-const Trades = (props:{currency: string})=> {
-  const trades: ITrades[] = useSelector((state:any)=> state.ticker.value)
+const Trades = (props:{currency: string, trades: any[]})=> {
   const pair = props.currency.split('-')
 
   return(
@@ -21,7 +17,7 @@ const Trades = (props:{currency: string})=> {
         </tr>
       </thead>
       <tbody>
-        {trades && trades.map((v, i)=>
+        {props.trades?.map((v, i)=>
         <tr key={i}>
           <td>{new Date(Number(v.timestamp.concat('000'))).toLocaleTimeString()}</td>
           <td>{
